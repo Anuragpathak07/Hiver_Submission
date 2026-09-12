@@ -57,6 +57,7 @@ cp .env.example .env
 ### Step 2: Run Unit & Integration Tests (~30 seconds)
 ```bash
 pytest tests/
+# or: python -m pytest tests/
 ```
 *Expected Output:* `4 passed in ~50s` verifying pipeline components, escalation triggers, and RAG integration.
 
