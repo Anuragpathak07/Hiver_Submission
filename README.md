@@ -32,9 +32,9 @@ The repository is fully self-contained with pre-computed vector caches and train
 
 ### Step 1: Environment Setup (~2 minutes)
 ```bash
-# Clone the repository
-git clone <repository_url>
-cd hiver-support-agent
+# 1. Clone repository & set up environment
+git clone https://github.com/Anuragpathak07/Hiver_Submission.git
+cd Hiver_Submission
 
 # Create and activate virtual environment
 python -m venv .venv
