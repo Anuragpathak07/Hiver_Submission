@@ -5,7 +5,7 @@
 [![Model](https://img.shields.io/badge/LLM-Groq%20(openai%2Fgpt--oss--20b)-orange.svg)](https://groq.com/)
 [![Tests](https://img.shields.io/badge/Tests-Pytest%20Passing-brightgreen.svg)]()
 
-Production-grade AI Customer Support Agent built for **AppleSupport** using the Customer Support on Twitter (`twcs.csv`) dataset. 
+A complete AI customer support pipeline built for **AppleSupport** using the Customer Support on Twitter (`twcs.csv`) dataset. 
 
 This repository contains the complete end-to-end AI system: automated intent classification, dual-engine RAG historical case retrieval, Groq-powered grounded response drafting, multi-tiered escalation, an offline evaluation harness, an LLM-as-Judge evaluator, and a 100% human-verified Golden Evaluation Set.
 
@@ -155,14 +155,14 @@ To build an unbiased evaluation benchmark (`N = 200`):
 - **Data Isolation:** All 200 Golden Set case IDs were **strictly excluded** from classifier training datasets and retrieval vector indices to prevent data leakage.
 
 ### 3.2 Human Verification Procedure & CLI Tooling
-- We built an interactive CLI annotation tool ([annotate_golden.py](file:///d:/All_Project/Hiver_Submission/hiver-support-agent/src/evaluation/annotate_golden.py)) to review each case individually.
+- We built an interactive CLI annotation tool (`src/evaluation/annotate_golden.py`) to review each case individually.
 - Each case was pre-annotated with a silver intent label (from KMeans model mapping).
 - Evaluators reviewed the raw customer query, full conversation context, and verified or corrected the label.
 
 ### 3.3 Disagreement Analysis & Ground Truth Freeze
 - **Silver vs. Human Agreement:** **92.50%** (185 out of 200 cases matched).
 - **15 Disagreements Corrected:** For example, cases where update-induced hardware symptoms (e.g. camera unresponsive after update) were misassigned to hardware rather than `ios_update_issues`, or general frustration misassigned to `other_unclear`.
-- The human-verified labels were frozen at [golden_annotated.csv](file:///d:/All_Project/Hiver_Submission/hiver-support-agent/data/golden/golden_annotated.csv) as the definitive evaluation benchmark.
+- The human-verified labels were frozen at `data/golden/golden_annotated.csv` as the definitive evaluation benchmark.
 
 ---
 
@@ -196,111 +196,13 @@ Incoming Customer Query
 
 ---
 
-## 5. Main Assignment Report
+## 5. Full Analysis
 
-### Section A: Problem Framing (What "Good" Means & Scope Boundaries)
-For AppleSupport on Twitter, an AI support agent must meet three operational criteria:
-1. **Grounded Precision:** Responses must be strictly backed by verified AppleSupport resolutions without inventing troubleshooting steps or hallucinating non-existent URLs.
-2. **Conservative Escalation:** High-risk queries (account recovery, billing disputes) or low-confidence predictions must be escalated to human agents with a clear diagnostic reason.
-3. **Reproducible Proof:** Offline evaluation must demonstrate measurable superiority over trivial and simple baselines on a clean, isolated benchmark.
+Problem framing, baseline comparisons, failure analysis, the misleading-number section, and next-week priorities are in the standalone report:
 
-**What We Chose Not to Build:**
-- **Automated Live Twitter Posting:** The agent generates drafts for agent-assist review rather than executing unmonitored live tweets.
-- **Multilingual Support:** Optimization is restricted to English queries (non-English queries are caught by `other_unclear` / escalation).
-- **Multi-Modal Vision Processing:** Image links (`t.co` screenshots) are handled via text mentions without running vision models.
+`reports/Hiver_AI_Support_Agent_Report.md`
 
----
-
-### Section B: Results vs. Two Baselines
-
-We evaluated three intent classification models on the frozen 200-example Golden Set:
-
-1. **Baseline 1 (Trivial): Majority Class Baseline**
-   - Always predicts the most frequent intent in the training corpus (`ios_update_issues`).
-   - *Accuracy:* `15.50%` | *Macro-F1:* `0.0335` | *Weighted-F1:* `0.0416`
-2. **Baseline 2 (Simple): TF-IDF + Logistic Regression**
-   - Fits `TfidfVectorizer(max_features=10000, ngram_range=(1,2))` + `LogisticRegression(C=1.0)`.
-   - *Accuracy:* `79.50%` | *Macro-F1:* `0.7954` | *Weighted-F1:* `0.7955`
-3. **Our Model (Improved): SentenceTransformer + Calibrated LogReg**
-   - Generates 384-dimensional dense embeddings (`all-MiniLM-L6-v2`) + `LogisticRegression(C=2.0)`.
-   - *Accuracy:* **`85.00%`** | *Macro-F1:* **`0.8512`** | *Weighted-F1:* **`0.8502`**
-
-#### Classification Report (Our Model on Golden Set):
-```
-                            precision    recall  f1-score   support
- account_identity_issue        0.880     0.880     0.880        25
-     battery_life_issue        0.920     0.920     0.920        25
-      ios_update_issues        0.769     0.800     0.784        25
-  iphone_hardware_issue        0.800     0.800     0.800        25
-keyboard_autocorrect_issue     0.960     0.960     0.960        25
-         macbook_issues        0.880     0.880     0.880        25
-      music_audio_issue        0.840     0.840     0.840        25
-          other_unclear        0.750     0.720     0.735        25
-
-               accuracy                            0.850       200
-              macro avg        0.850     0.850     0.851       200
-           weighted avg        0.850     0.850     0.850       200
-```
-
----
-
-### Section C: Top 5 Real Failure Modes Analysis
-
-1. **Hardware vs. Software Symptom Ambiguity**
-   - *Example (`apple_2750532`):* `"what's wrong with the iPhone X I can't access my contacts"`
-   - *Predicted:* `iphone_hardware_issue` | *True Label:* `ios_update_issues`
-   - *Hypothesis:* Queries describing hardware symptoms caused by software update bugs share dense embeddings with physical hardware failures.
-2. **Short / Noisy Customer Queries**
-   - *Example (`apple_1709355`):* `"what the fuck https://t.co/LB9KpiXBJj"`
-   - *Predicted:* `other_unclear` | *Top Retrieval Sim:* `0.32`
-   - *Hypothesis:* Absence of domain keywords prevents TF-IDF or embedding models from retrieving specific troubleshooting guides. (Safely escalated by Escalation Engine).
-3. **Taxonomy Boundary Blur (Account vs. Store Purchases)**
-   - *Example (`apple_684378`):* `"Hi I have a question about purchasing a MacBook, could I DM you?"`
-   - *Predicted:* `account_identity_issue` | *True Label:* `other_unclear`
-   - *Hypothesis:* Purchasing questions overlap between store account support and general inquiries.
-4. **Retrieval Response Divergence**
-   - *Example (`apple_14838`):* Query matches historical battery query with **0.8817 similarity**, but historical support response was *"What happens when you open Mail? Send DM"*.
-   - *Hypothesis:* High query similarity does not guarantee high response quality in raw Twitter support threads where agents frequently request DMs.
-5. **Emoji & Informal Slang Escalation Over-conservatism**
-   - *Example (`apple_164246`):* `"Plz get ur shit together and fix I.T"`
-   - *Hypothesis:* High informal syntax variance lowers classifier confidence, triggering escalation even when the underlying problem (keyboard glitch) is standard.
-
----
-
-### Section D: "What is Misleading About My Headline Number?" 
-
-While our headline numbers (**85.00% Intent Accuracy**, **87.50% Retrieval Match**, **4.25/5.0 LLM-Judge Score**) reflect a strong system, presenting them without context is misleading:
-
-1. **Margin of Error on Small Golden Set ($N=200$):** At $N=200$ with 85% accuracy, the 95% confidence interval spans **[80.0%, 90.0%]** (margin of error $\approx \pm 5.0\%$).
-2. **Stratified vs. Natural Class Distribution:** The Golden Set uses balanced sampling (~25 cases/intent). In real Twitter volume, `ios_update_issues` and `battery_life_issue` account for >55% of queries. Unweighted accuracy overrepresents rare classes.
-3. **Silver Pre-Annotation Confirmation Bias:** Evaluators accepted pre-annotated silver labels in 92.5% of cases. Pre-labeling introduces mild confirmation bias compared to blind double-annotation.
-4. **Temporal Shift (2017 Dataset):** Models trained on 2017 iOS 11 issues will degrade on modern iOS 17/18 queries without continuous retraining.
-5. **Offline Retrieval Metric vs. Resolution:** Intent match @ 3 measures class overlap, not whether the historical response resolved the customer's specific problem.
-
----
-
-### Section E: What You'd Do Next with One More Week
-1. **Blind Double-Annotation:** Annotate 1,000 cases blindly without pre-labeled silver intents to eliminate confirmation bias.
-2. **URL Canonicalization:** Map raw 2017 `t.co` shortlinks to canonical live `support.apple.com` article endpoints.
-3. **Contrastive Fine-Tuning:** Fine-tune `all-MiniLM-L6-v2` using Multiple Negatives Ranking (MNR) loss on AppleSupport query-response pairs.
-4. **LLM-Based Response Filtering:** Filter out historical support responses that are mere DM requests before populating the RAG vector index.
-
----
-
-### Section F: Complete Decision Log (12 Key Engineering Decisions)
-
-1. **Target Brand Selection (`AppleSupport`):** High volume (106K+ tweets), multi-turn diagnostic threads, and rich resolution links.
-2. **Case as Unit of Analysis:** Reconstructed flat tweets into 80,672 complete customer-support cases using parent tweet ID chains.
-3. **Embedding-Based Intent Discovery:** Used `all-MiniLM-L6-v2` + KMeans ($k=12$) to discover bottom-up intent clusters.
-4. **Groq LLM Taxonomy Consolidation:** Used Groq (`openai/gpt-oss-20b`) with strict JSON Schema constraints to merge redundant clusters into 8 frozen intents.
-5. **Frozen 8-Intent Taxonomy:** Selected 8 intents to maintain high inter-class variance while covering >95% of customer queries.
-6. **Strict Data Isolation:** Excluded all 200 Golden Set case IDs from training corpora and vector retrieval indices.
-7. **Classifier Choice (SentenceTransformer + LogReg):** Outperformed TF-IDF (85.00% vs 79.50%) by capturing semantic symptom phrasing.
-8. **Dual Retrieval Indexing:** Built primary semantic vector search and secondary TF-IDF search (Semantic achieved 87.50% Match@3 vs 69.50% Lexical).
-9. **Grounded Response Generation:** Prompted Groq (`openai/gpt-oss-20b`) to restrict responses strictly to retrieved historical evidence.
-10. **Multi-Tiered Escalation Engine:** Combined intent risk, confidence (<0.50), retrieval similarity (<0.40), and sensitive keywords ("billing", "refund") for deterministic escalation.
-11. **6-Criterion Quality Rubric for LLM-as-Judge:** Evaluated correctness, relevance, helpfulness, grounding, non-hallucination, and tone.
-12. **Local Caching & Reproducibility:** Cached HuggingFace models, vector indices, and joblib classifiers to enable <5 minute offline execution.
+For the 12 key engineering decisions, see `decision_log.md`.
 
 ---
 
