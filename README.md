@@ -255,7 +255,7 @@ keyboard_autocorrect_issue     0.960     0.960     0.960        25
 
 ---
 
-### Section D: "What is Misleading About My Headline Number?" (Mandatory Section)
+### Section D: "What is Misleading About My Headline Number?" 
 
 While our headline numbers (**85.00% Intent Accuracy**, **87.50% Retrieval Match**, **4.25/5.0 LLM-Judge Score**) reflect a strong system, presenting them without context is misleading:
 
