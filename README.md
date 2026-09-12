@@ -125,7 +125,7 @@ Raw tweets are flat and unorganized. To turn tweets into structured support case
    - Initial Customer Query
    - Complete Multi-Turn Conversation
    - Final Support Agent Response
-3. Extracted **80,672 complete AppleSupport cases** stored at `data/processed/applesupport_cases.csv`.
+3. Extracted **80,672 complete AppleSupport cases** stored at `data/processed/applesupport_cases.csv` (a 1,000-case lightweight subsample is tracked at `data/applesupport_subsample_1k.csv`).
 
 ---
 
@@ -226,7 +226,8 @@ hiver-support-agent/
 │   ├── escalation/                # Deterministic Escalation Engine
 │   └── evaluation/                # Evaluation Harness & LLM-as-Judge Evaluator
 │
-├── data/                          # Data Corpora (Excluded from raw noise)
+├── data/                          # Data Corpora & Subsample Benchmarks
+│   ├── applesupport_subsample_1k.csv # 1,000-Case Lightweight Tracked Subsample
 │   ├── raw/                       # Raw twcs.csv dataset location
 │   ├── processed/                 # Processed case corpus & vector model artifacts
 │   └── golden/                    # 200-Example Golden Set Benchmark & Annotation Note
