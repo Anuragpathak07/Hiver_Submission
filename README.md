@@ -211,7 +211,7 @@ For the 12 key engineering decisions, see `decision_log.md`.
 ```
 hiver-support-agent/
 │
-├── README.md                      # Primary Submission Report & Quick Start Guide
+├── README.md                      # Quick Start Guide & Project Overview
 ├── decision_log.md                # 12 Non-Obvious Architecture & Product Decisions
 ├── requirements.txt               # Python Dependencies
 ├── .env.example                   # Environment Configuration Template

@@ -69,7 +69,9 @@ The processing flow for an incoming customer query proceeds through five sequent
 ## 3. Baselines and Results
 
 ### 3.1 Quantitative Baseline Comparisons
-All metrics were evaluated on the frozen, isolated 200-example Golden Evaluation Set (`data/golden/golden_annotated.csv`). None of the 200 Golden Set case IDs were present in classifier training corpora or retrieval vector indices.
+The 200-example Golden Set was constructed via stratified sampling (~25 cases per intent), with each case pre-annotated by a KMeans-derived silver label and then reviewed by a human evaluator via an interactive CLI tool (`src/evaluation/annotate_golden.py`), who accepted or corrected it. Silver-to-human agreement was 92.5% (185/200 cases matched).
+
+All metrics were evaluated on this frozen, isolated 200-example Golden Evaluation Set (`data/golden/golden_annotated.csv`). None of the 200 Golden Set case IDs were present in classifier training corpora or retrieval vector indices.
 
 | Metric | Trivial Baseline (Majority Class) | Simple Baseline (TF-IDF + LogReg) | Primary System (SentenceTransformer + LogReg) | Traceability Log / Script |
 | :--- | :--- | :--- | :--- | :--- |
