@@ -26,14 +26,14 @@ This repository contains the complete end-to-end AI system: automated intent cla
 
 ---
 
-### Why Hiver Engineering Leadership Will Love This
+### Core Engineering Principles & Production Philosophy
 
-Hiver is a customer-support SaaS platform where trust, safety, evaluation rigor, and production code structure are paramount:
+In customer-support AI systems, reliability, safety, and evaluation rigor are paramount:
 
-1. **"The proof is worth more than the system"**: We didn't just build a pipeline; we built an isolated evaluation harness that rigorously evaluates every layer (**Classifier**, **Retrieval**, **Generation**, **Escalation**, and **LLM-Judge**).
-2. **Safety & Guardrails**: Our **27.0% Escalation Rate** proves we understand that in customer support, escalating an ambiguous or account security query is a critical safety feature, not a failure.
-3. **Engineering Integrity**: We included a mandatory *"What is Misleading About My Headline Number?"* section, demonstrating senior-level ML engineering self-awareness rather than naive overconfidence.
-4. **Reproducibility**: Evaluators can run `pytest tests/` or `python src/pipeline.py` and see the complete pipeline work out-of-the-box in under 10 seconds.
+1. **Comprehensive Multi-Layer Evaluation ("Proof Over System")**: We evaluated every tier independently—Intent Classifier, RAG Retrieval Engine, Grounded Generation, Deterministic Escalation, and LLM-as-Judge—rather than relying solely on end-to-end blackbox metrics.
+2. **Production Safety & Risk-Aware Guardrails**: Our **27.0% Escalation Rate** reflects intentional safety design: high-risk queries (account security, billing) and low-confidence predictions are deterministically routed to human specialists.
+3. **Engineering Integrity & Self-Awareness**: Includes a dedicated *"What is Misleading About My Headline Number?"* analysis dissecting confidence intervals ($N=200$), temporal drift (2017 iOS dataset), and silver pre-label confirmation bias.
+4. **Instant Offline Reproducibility**: Evaluators can run unit/integration tests (`pytest tests/`) or single-query inference (`python src/pipeline.py`) in under 10 seconds without mandatory API key dependencies.
 
 ---
 
