@@ -1,0 +1,12 @@
+.env
+.hf_cache/
+.cache/
+__pycache__/
+*.pyc
+.venv/
+
+# Ignore raw Kaggle dataset & large CSV datasets (>50MB)
+data/raw/
+data/processed/*.csv
+!data/processed/cluster_profiles.csv
+!data/processed/intent_clusters.csv

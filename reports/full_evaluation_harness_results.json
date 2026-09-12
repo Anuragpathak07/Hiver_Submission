@@ -1,0 +1,18 @@
+{
+  "dataset_size": 200,
+  "intent_accuracy": 0.85,
+  "retrieval_intent_match_rate_at_3": 0.875,
+  "retrieval_avg_top1_similarity": 0.7141756616532803,
+  "escalation_distribution": {
+    "escalated_count": 54,
+    "auto_handled_count": 146,
+    "escalation_rate": 0.27,
+    "auto_handle_rate": 0.73
+  },
+  "escalation_rules_breakdown": {
+    "AUTO_HANDLE_RULES_PASSED": 146,
+    "HIGH_RISK_INTENT": 50,
+    "LOW_CLASSIFIER_CONFIDENCE": 3,
+    "SENSITIVE_KEYWORD": 1
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "lexical": {
+    "intent_match_rate_at_k": 0.695,
+    "avg_top1_similarity": 0.3710544063971088,
+    "top_k": 3
+  },
+  "semantic": {
+    "intent_match_rate_at_k": 0.87,
+    "avg_top1_similarity": 0.7248100492358208,
+    "top_k": 3
+  }
+}

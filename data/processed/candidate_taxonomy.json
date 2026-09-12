@@ -1,0 +1,80 @@
+{
+  "intents": [
+    {
+      "intent": "ios_update_issues",
+      "description": "Problems caused by iOS updates such as crashes, performance degradation, battery drain, and data loss.",
+      "example_problem": "After updating to iOS 11 my iPhone keeps crashing and apps freeze.",
+      "cluster_ids": [
+        0,
+        1,
+        4
+      ],
+      "mapping_reason": "These clusters all contain complaints about iOS updates causing device instability."
+    },
+    {
+      "intent": "other_unclear",
+      "description": "General frustration or ambiguous complaints not clearly tied to a specific product or issue.",
+      "example_problem": "I am frustrated with Apple support and the service.",
+      "cluster_ids": [
+        2
+      ],
+      "mapping_reason": "Cluster 2 contains generic anger and unclear product issues."
+    },
+    {
+      "intent": "macbook_issues",
+      "description": "Hardware or software problems on MacBook devices, including crashes, connectivity, and performance.",
+      "example_problem": "My MacBook Pro keeps shutting down after updating to High Sierra.",
+      "cluster_ids": [
+        3
+      ],
+      "mapping_reason": "Cluster 3 focuses on MacBook-related issues."
+    },
+    {
+      "intent": "keyboard_autocorrect_issue",
+      "description": "Keyboard or autocorrect glitches where letters (especially 'I') turn into question marks or other symbols.",
+      "example_problem": "The 'I' on my phone turns into a question mark box after the latest update.",
+      "cluster_ids": [
+        5,
+        10
+      ],
+      "mapping_reason": "Both clusters discuss the same keyboard autocorrect problem."
+    },
+    {
+      "intent": "music_audio_issue",
+      "description": "Audio playback or Apple Music related problems, including sync, playback, and device connectivity.",
+      "example_problem": "Apple Music won't play my songs after the update.",
+      "cluster_ids": [
+        6
+      ],
+      "mapping_reason": "Cluster 6 contains Apple Music and audio issues."
+    },
+    {
+      "intent": "iphone_hardware_issue",
+      "description": "Physical or functional problems with iPhones such as screen blackouts, app crashes, lost photos, and charging issues.",
+      "example_problem": "My iPhone 7 keeps rebooting and I lose all my photos.",
+      "cluster_ids": [
+        7,
+        9
+      ],
+      "mapping_reason": "Clusters 7 and 9 contain hardware-related complaints."
+    },
+    {
+      "intent": "account_identity_issue",
+      "description": "Issues with Apple ID, Apple Pay, iCloud, and account recovery.",
+      "example_problem": "I forgot my Apple ID password and can't reset it.",
+      "cluster_ids": [
+        8
+      ],
+      "mapping_reason": "Cluster 8 focuses on account and identity problems."
+    },
+    {
+      "intent": "battery_life_issue",
+      "description": "Battery drain or performance problems after updates or normal use.",
+      "example_problem": "My battery drains from 80% to 20% in 30 minutes after updating to iOS 11.",
+      "cluster_ids": [
+        11
+      ],
+      "mapping_reason": "Cluster 11 specifically addresses battery life concerns."
+    }
+  ]
+}
